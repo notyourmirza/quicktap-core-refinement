@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Some older Android builds (and devices with a stale trust store) do not have
+  the DigiCert Global Root G2 anchor that our Hostinger certificate chains up to,
+  which surfaces as java.security.cert.CertPathValidatorException at login.
+  We therefore trust the system store PLUS a bundled copy of that root.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/digicert_global_root_g2" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ============================================================
+         QuickTap POS — night palette.
+         Same two-colour language as day mode (one emerald accent on a
+         neutral surface stack), inverted: ink surfaces, paper text.
+         The accent stays runtime-overridable by the Super Admin.
+         ============================================================ -->
+
+    <!-- Brand (runtime-overridable) — lifted for contrast on dark ink -->
+    <color name="brand_primary">#22C08A</color>
+    <color name="brand_primary_dark">#8FE6C4</color>
+    <color name="brand_primary_soft">#12291F</color>
+    <color name="brand_secondary">#22C08A</color>
+    <color name="brand_secondary_soft">#12291F</color>
+    <color name="brand_accent">#22C08A</color>
+    <color name="brand_accent_soft">#12291F</color>
+
+    <!-- Surfaces -->
+    <color name="app_background">#0E1311</color>
+    <color name="app_surface">#161C19</color>
+    <color name="app_surface_muted">#1E2622</color>
+    <color name="app_outline">#2A332E</color>
+    <color name="app_outline_soft">#222B27</color>
+
+    <!-- Text -->
+    <color name="text_primary">#ECF2EE</color>
+    <color name="text_muted">#9AA8A1</color>
+    <color name="text_on_brand">#05130D</color>
+
+    <!-- Feedback -->
+    <color name="danger">#FF6B60</color>
+    <color name="danger_soft">#2A1614</color>
+    <color name="success">#22C08A</color>
+    <color name="success_soft">#12291F</color>
+
+    <color name="ripple_brand">#2222C08A</color>
+
+    <color name="hero_gradient_start">#22C08A</color>
+    <color name="hero_gradient_mid">#22C08A</color>
+    <color name="hero_gradient_end">#22C08A</color>
+
+    <color name="dark_background">#0E1311</color>
+    <color name="dark_surface">#161C19</color>
+    <color name="dark_surface_muted">#1E2622</color>
+    <color name="dark_outline">#2A332E</color>
+    <color name="dark_outline_soft">#222B27</color>
+    <color name="dark_text_primary">#ECF2EE</color>
+    <color name="dark_text_muted">#9AA8A1</color>
+
+    <color name="glass_stroke">#2A332E</color>
+
+    <!-- Bottom navigation -->
+    <color name="nav_surface_start">#161C19</color>
+    <color name="nav_surface_end">#161C19</color>
+    <color name="nav_stroke">#2A332E</color>
+    <color name="nav_indicator">#12291F</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Responsive metrics — overridden in values-sw360dp / sw600dp / land -->
+    <dimen name="screen_gutter">16dp</dimen>
+    <dimen name="card_radius">10dp</dimen>
+
+    <!-- Floating bottom navigation -->
+    <dimen name="nav_height">64dp</dimen>
+    <dimen name="nav_margin_horizontal">12dp</dimen>
+    <dimen name="nav_margin_bottom">10dp</dimen>
+    <dimen name="nav_icon_size">22dp</dimen>
+    <dimen name="nav_indicator_width">56dp</dimen>
+    <dimen name="nav_indicator_height">30dp</dimen>
+    <dimen name="nav_label_size">10sp</dimen>
+    <dimen name="nav_container_padding">6dp</dimen>
+</resources>

@@ -1,0 +1,85 @@
+:root{
+  --qt-primary:#0E9F6E;
+  --qt-primary-soft:rgba(14,159,110,.14);
+  --qt-bg:#0B0F14;
+  --qt-surface:#121821;
+  --qt-surface-2:#182130;
+  --qt-border:rgba(255,255,255,.08);
+  --qt-text:#E6EDF3;
+  --qt-muted:#8B98A9;
+}
+body{
+  background:var(--qt-bg);
+  color:var(--qt-text);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none}
+
+/* ---------- Auth screen ---------- */
+.auth-shell{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(1200px 600px at 15% -10%,rgba(14,159,110,.25),transparent 60%),
+             radial-gradient(900px 500px at 110% 110%,rgba(52,211,153,.18),transparent 55%),var(--qt-bg);
+}
+.auth-card{
+  width:100%;max-width:420px;background:var(--qt-surface);border:1px solid var(--qt-border);
+  border-radius:20px;padding:36px 32px;box-shadow:0 30px 80px -30px rgba(0,0,0,.9);
+}
+.auth-flash{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:20;max-width:420px}
+
+/* ---------- Shell ---------- */
+.app-shell{display:flex;min-height:100vh}
+.sidebar{
+  width:250px;flex:0 0 250px;background:var(--qt-surface);border-right:1px solid var(--qt-border);
+  display:flex;flex-direction:column;padding:18px 14px;position:sticky;top:0;height:100vh;
+}
+.brand{display:flex;align-items:center;gap:12px;padding:6px 10px 20px}
+.brand strong{display:block;font-size:1.05rem;letter-spacing:.2px}
+.brand small{color:var(--qt-muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em}
+.brand-dot{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,var(--qt-primary),#34D399)}
+.sidebar .nav-link{
+  color:var(--qt-muted);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:12px;
+  font-size:.92rem;font-weight:500;transition:.15s;
+}
+.sidebar .nav-link i{font-size:1.05rem}
+.sidebar .nav-link:hover{background:var(--qt-surface-2);color:var(--qt-text)}
+.sidebar .nav-link.active{background:var(--qt-primary-soft);color:#34D399}
+.sidebar-foot{margin-top:auto;border-top:1px solid var(--qt-border);padding-top:10px}
+.content{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  display:flex;align-items:center;gap:14px;padding:16px 26px;border-bottom:1px solid var(--qt-border);
+  background:rgba(18,24,33,.7);backdrop-filter:blur(10px);position:sticky;top:0;z-index:5;
+}
+.page{padding:26px;max-width:1400px;width:100%}
+
+/* ---------- Surfaces ---------- */
+.card{background:var(--qt-surface);border:1px solid var(--qt-border);border-radius:16px}
+.card-header{background:transparent;border-bottom:1px solid var(--qt-border);font-weight:600;padding:14px 18px}
+.stat-card{padding:18px;border-radius:16px;background:var(--qt-surface);border:1px solid var(--qt-border);height:100%}
+.stat-card .label{color:var(--qt-muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.1em}
+.stat-card .value{font-size:1.7rem;font-weight:700;margin-top:6px}
+.stat-card .trend{font-size:.8rem;color:var(--qt-muted)}
+.table{--bs-table-bg:transparent;--bs-table-color:var(--qt-text);margin-bottom:0}
+.table thead th{color:var(--qt-muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;border-color:var(--qt-border)}
+.table td,.table th{border-color:var(--qt-border);vertical-align:middle}
+.form-control,.form-select{background:var(--qt-surface-2);border-color:var(--qt-border);color:var(--qt-text)}
+.form-control:focus,.form-select:focus{
+  background:var(--qt-surface-2);color:var(--qt-text);border-color:var(--qt-primary);
+  box-shadow:0 0 0 .2rem var(--qt-primary-soft);
+}
+.form-control::placeholder{color:#6b7787}
+.btn-primary{background:var(--qt-primary);border-color:var(--qt-primary)}
+.btn-primary:hover,.btn-primary:focus{background:#0c8a5f;border-color:#0c8a5f}
+.btn-outline-secondary{border-color:var(--qt-border);color:var(--qt-text)}
+.nav-tabs{border-color:var(--qt-border)}
+.nav-tabs .nav-link{color:var(--qt-muted);border:0;border-bottom:2px solid transparent}
+.nav-tabs .nav-link.active{background:transparent;color:#34D399;border-bottom-color:var(--qt-primary)}
+.swatch{width:26px;height:26px;border-radius:8px;border:1px solid var(--qt-border);display:inline-block;vertical-align:middle}
+.empty{padding:44px;text-align:center;color:var(--qt-muted)}
+
+@media (max-width:991.98px){
+  .sidebar{position:fixed;z-index:30;transform:translateX(-100%);transition:.2s}
+  .sidebar.open{transform:none}
+  .page{padding:18px}
+}

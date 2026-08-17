@@ -1,0 +1,27 @@
+# Deny direct access to panel internals; only index.php and assets are public.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(core|pages|views)/ - [F,L]
+</IfModule>
+
+<FilesMatch "\.(php)$">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+
+<Files "bootstrap.php">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</Files>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "same-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+Options -Indexes
+DirectoryIndex index.php

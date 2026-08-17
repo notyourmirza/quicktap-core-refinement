@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ============================================================
+         QuickTap POS — "Emerald & Off-white" (LIGHT ONLY, two colours)
+         A quiet, flat, high-contrast counter UI: paper white surfaces,
+         hairline dividers, ink text and a single confident accent.
+         The accent is a DEFAULT ONLY — the Super Admin panel colour
+         overrides it at runtime through ThemeEngine.
+         ============================================================ -->
+
+    <!-- Brand (runtime-overridable) -->
+    <color name="brand_primary">#F97316</color>
+    <color name="brand_primary_dark">#C2410C</color>
+    <color name="brand_primary_soft">#FFEDE0</color>
+    <color name="brand_secondary">#F97316</color>
+    <color name="brand_secondary_soft">#FFEDE0</color>
+    <color name="brand_accent">#EA580C</color>
+    <color name="brand_accent_soft">#FFEDE0</color>
+
+    <!-- Surfaces -->
+    <color name="app_background">#FFFFFF</color>
+    <color name="app_surface">#FFFFFF</color>
+    <color name="app_surface_muted">#F4F6F9</color>
+    <color name="app_outline">#DDE2EA</color>
+    <color name="app_outline_soft">#EAEEF4</color>
+
+    <!-- Text -->
+    <color name="text_primary">#0B0F14</color>
+    <color name="text_muted">#5B6675</color>
+    <color name="text_on_brand">#FFFFFF</color>
+
+    <!-- Feedback -->
+    <color name="danger">#D92D20</color>
+    <color name="danger_soft">#FEECEB</color>
+    <color name="success">#0E9F6E</color>
+    <color name="success_soft">#E6F5EF</color>
+
+    <!-- Ripple -->
+    <color name="ripple_brand">#14F97316</color>
+
+    <!-- Flat "hero" fills (kept as names so old layouts still resolve) -->
+    <color name="hero_gradient_start">#F97316</color>
+    <color name="hero_gradient_mid">#F97316</color>
+    <color name="hero_gradient_end">#EA580C</color>
+
+    <!-- Light palette mirror (app is day-mode only) -->
+    <color name="dark_background">#FFFFFF</color>
+    <color name="dark_surface">#FFFFFF</color>
+    <color name="dark_surface_muted">#F4F6F9</color>
+    <color name="dark_outline">#DDE2EA</color>
+    <color name="dark_outline_soft">#EAEEF4</color>
+    <color name="dark_text_primary">#0B0F14</color>
+    <color name="dark_text_muted">#5B6675</color>
+
+    <color name="glass_stroke">#DDE2EA</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <!-- Bottom navigation -->
+    <color name="nav_surface_start">#FFFFFF</color>
+    <color name="nav_surface_end">#FFFFFF</color>
+    <color name="nav_stroke">#DDE2EA</color>
+    <color name="nav_indicator">#FFE3D1</color>
+</resources>
