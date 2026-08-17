@@ -190,10 +190,11 @@ public final class ApiClient {
     }
 
     private static String base() {
-        // Endpoint is remote-controlled (Firebase) with the compiled-in URL as
-        // fallback, so the backend can be moved without shipping a new APK.
+        // Endpoint is remote-controlled (Firebase Remote Config: api_base_url)
+        // with the fixed bootstrap URL as the last known-good fallback, so the
+        // backend can be moved without shipping a new APK.
         String b = RemoteEndpoint.apiBase();
-        if (b == null || b.isEmpty()) b = BuildConfig.API_BASE_URL;
+        if (b == null || b.isEmpty()) b = RemoteEndpoint.bootstrapBase();
         return b.endsWith("/") ? b : b + "/";
     }
 
