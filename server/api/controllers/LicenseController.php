@@ -300,6 +300,32 @@ final class LicenseController
         ]);
     }
 
+    /**
+     * Fixed bootstrap payload: the non-secret Firebase client configuration the
+     * app needs to reach Remote Config, plus the current api_base_url as a
+     * last-resort fallback. Contains NO licence data and NO server secret.
+     */
+    public function bootstrap(Request $req): void
+    {
+        RateLimit::hit('app.bootstrap', $req->ip(), 120, 60);
+
+        $apiBase = trim((string) (self::setting('api_base_url') ?? ''));
+        if ($apiBase !== '' && !str_starts_with($apiBase, 'https://')) {
+            $apiBase = '';
+        }
+
+        Response::ok([
+            'firebase' => [
+                'project_id' => (string) (self::setting('firebase_project_id') ?? ''),
+                'app_id'     => (string) (self::setting('firebase_app_id') ?? ''),
+                'api_key'    => (string) (self::setting('firebase_api_key') ?? ''),
+                'sender_id'  => (string) (self::setting('firebase_sender_id') ?? ''),
+            ],
+            'api_base_url'   => $apiBase,
+            'server_time_ms' => time() * 1000,
+        ]);
+    }
+
     // ------------------------------------------------------------- helpers
 
     private static function support(): array

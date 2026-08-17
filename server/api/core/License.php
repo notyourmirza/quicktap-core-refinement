@@ -17,6 +17,7 @@ final class License
     public const EXPIRED = 'EXPIRED';
     public const REVOKED = 'REVOKED';
     public const BLOCKED = 'BLOCKED';
+    public const SUSPENDED = 'SUSPENDED';
 
     /** Newest licence row for a shop (optionally narrowed to a user). */
     public static function forShop(int $shopId, ?int $userId = null): ?array

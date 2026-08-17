@@ -45,6 +45,7 @@ $router->post('/v1/auth/login', [$auth, 'login']);
 $router->post('/v1/auth/refresh', [$auth, 'refresh']);
 $router->post('/v1/auth/register', [$license, 'register']);
 $router->get('/v1/app/config', [$license, 'appConfig']);
+$router->get('/v1/app/bootstrap', [$license, 'bootstrap']);
 
 // ---- licence (session required, licence NOT required) ----------------------
 $router->get('/v1/license/status', [$license, 'status']);
