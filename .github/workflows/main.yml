@@ -25,33 +25,33 @@ jobs:
           java-version: '17'
           cache: gradle
 
+      - name: Set up Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
       - name: Verify Android project
         working-directory: android
         run: |
           echo "Checking Android project..."
-          test -f gradlew
           test -f settings.gradle
+          test -f build.gradle
           test -f app/build.gradle
           test -f app/google-services.json
-          test -f gradle/wrapper/gradle-wrapper.jar
           test -f gradle/wrapper/gradle-wrapper.properties
           echo "Android project structure OK"
 
-      - name: Make Gradle executable
-        working-directory: android
-        run: chmod +x gradlew
-
       - name: Check Gradle
         working-directory: android
-        run: ./gradlew --version
+        run: gradle --version
 
       - name: Clean project
         working-directory: android
-        run: ./gradlew clean --no-daemon
+        run: gradle clean --no-daemon
 
       - name: Build Debug APK
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: gradle assembleDebug --no-daemon --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
@@ -62,7 +62,7 @@ jobs:
 
       - name: Build Release APK
         working-directory: android
-        run: ./gradlew assembleRelease --no-daemon --stacktrace
+        run: gradle assembleRelease --no-daemon --stacktrace
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
