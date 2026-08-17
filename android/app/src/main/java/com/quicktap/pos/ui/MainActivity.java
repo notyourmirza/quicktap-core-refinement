@@ -351,8 +351,8 @@ public class MainActivity extends AppCompatActivity {
             if (ok) return;
             if ("DEVICE_MISMATCH".equals(code) || "SHOP_INACTIVE".equals(code)
                     || "USER_DISABLED".equals(code) || "SUBSCRIPTION_EXPIRED".equals(code)) {
-                startActivity(new Intent(this, LockedActivity.class));
-                finish();
+                // The server is the authority: hand the routing to the single gate.
+                LicenseService.status(this, state -> LicenseGate.route(this, state));
             }
         });
     }

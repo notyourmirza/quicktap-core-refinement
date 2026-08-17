@@ -42,7 +42,6 @@
             android:launchMode="singleTop" />
         <activity android:name=".ui.license.VerifyLicenseActivity" android:exported="false" />
         <activity android:name=".ui.license.ConfirmCredentialsActivity" android:exported="false" />
-        <activity android:name=".ui.LockedActivity" android:exported="false" />
         <activity android:name=".ui.UnlockActivity" android:exported="false"
             android:excludeFromRecents="true"
             android:launchMode="singleTop" />

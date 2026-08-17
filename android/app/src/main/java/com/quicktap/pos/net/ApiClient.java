@@ -30,7 +30,7 @@ import javax.net.ssl.HttpsURLConnection;
  * Single HTTP entry point for the QuickTap REST API.
  *
  * Responsibilities:
- *  - attaches the app credentials (X-App-Id / X-Api-Key / X-Api-Secret)
+ *  - attaches the app credentials (X-App-Id / X-Api-Key)
  *  - attaches the device fingerprint header used for device binding
  *  - attaches the JWT access token and transparently refreshes it once on 401
  *
@@ -95,7 +95,6 @@ public final class ApiClient {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("X-App-Id", BuildConfig.APP_ID);
             conn.setRequestProperty("X-Api-Key", BuildConfig.API_KEY);
-            conn.setRequestProperty("X-Api-Secret", BuildConfig.API_SECRET);
             conn.setRequestProperty("X-App-Version", BuildConfig.VERSION_NAME);
             conn.setRequestProperty("X-Device-Id", DeviceIdentity.id(ctx));
 
