@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_gutter">18dp</dimen>
+    <dimen name="nav_height">68dp</dimen>
+    <dimen name="nav_margin_horizontal">14dp</dimen>
+    <dimen name="nav_margin_bottom">14dp</dimen>
+    <dimen name="nav_icon_size">24dp</dimen>
+    <dimen name="nav_indicator_width">58dp</dimen>
+    <dimen name="nav_indicator_height">32dp</dimen>
+    <dimen name="nav_label_size">11sp</dimen>
+</resources>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="8dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.QuickTap.Title"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/textPrice"
+            style="@style/Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonMinus"
+        style="@style/Widget.Material3.Button.IconButton.Outlined"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="Decrease"
+        app:icon="@drawable/ic_minus"
+        app:iconTint="?attr/colorOnSurface"
+        app:strokeColor="?attr/colorOutline" />
+
+    <TextView
+        android:id="@+id/textQty"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonPlus"
+        style="@style/Widget.Material3.Button.IconButton.Outlined"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="Increase"
+        app:icon="@drawable/ic_plus"
+        app:iconTint="?attr/colorPrimary"
+        app:strokeColor="?attr/colorOutline" />
+
+    <TextView
+        android:id="@+id/textTotal"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonDelete"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="Remove"
+        app:icon="@drawable/ic_delete"
+        app:iconTint="?attr/colorError" />
+</LinearLayout>

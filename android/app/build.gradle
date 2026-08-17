@@ -1,0 +1,70 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.quicktap.pos'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.quicktap.pos"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+        // Apna self-hosted PHP API base URL yahan daalein (trailing slash ke saath).
+        // Dekhein: php-api/README.md
+        buildConfigField "String", "LICENSE_BASE_URL", "\"https://darkslateblue-deer-115300.hostingersite.com/php-api/\""
+        // ---- QuickTap v2 REST API (server/api). Trailing slash required. ----
+        buildConfigField "String", "API_BASE_URL", "\"https://mediumaquamarine-baboon-263984.hostingersite.com/api/\""
+        // Issued by the Super Admin panel -> Security / API clients.
+        buildConfigField "String", "APP_ID", "\"app_41f7d123706a\""
+        buildConfigField "String", "API_SECRET", "\"ef65baa5d30d79b6b4b434722e4de2c2793de14ec8e0afd1\""
+        // Yahi string php-api/config.php ke API_KEY se match honi chahiye.
+        buildConfigField "String", "API_KEY", "\"a94791db4b426d74bccd78155b2b4eedc773488ee7b4c7d2\""
+        vectorDrawables.useSupportLibrary true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
+    packagingOptions { resources.excludes += ['META-INF/*'] }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.8.4'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.8.4'
+
+    implementation 'androidx.room:room-runtime:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+
+    // Fingerprint / device-credential unlock
+    implementation 'androidx.biometric:biometric:1.1.0'
+    implementation 'androidx.fragment:fragment:1.8.2'
+
+    // Background auto-sync
+    implementation 'androidx.work:work-runtime:2.9.1'
+
+    // Google Drive backup (appDataFolder, uploaded over plain REST)
+    implementation 'com.google.android.gms:play-services-auth:21.2.0'
+}

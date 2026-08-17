@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Shared exports (PDF reports, receipts) live in the app cache. -->
+    <cache-path name="shared" path="shared/" />
+    <files-path name="exports" path="exports/" />
+</paths>

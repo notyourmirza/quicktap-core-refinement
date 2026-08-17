@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="QuickTap.App.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" MaxWidth="720" HorizontalAlignment="Left">
+            <TextBlock Text="Settings" Style="{StaticResource PageTitleStyle}" />
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Appearance" Style="{StaticResource SectionTitleStyle}" />
+                    <ComboBox Header="Light / dark mode" ItemsSource="{x:Bind ViewModel.ThemeModes}"
+                              SelectedItem="{x:Bind ViewModel.ThemeMode, Mode=TwoWay}" />
+                    <TextBlock Text="{x:Bind ViewModel.ActiveTheme}" Opacity="0.7" FontSize="12" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Sync and backup" Style="{StaticResource SectionTitleStyle}" />
+                    <ToggleSwitch Header="Automatic background sync"
+                                  OffContent="Manual only" OnContent="Automatic"
+                                  IsOn="{x:Bind ViewModel.AutoSync, Mode=TwoWay}" />
+                    <TextBlock Opacity="0.7" FontSize="12" TextWrapping="Wrap"
+                               Text="With automatic sync off, data uploads only when you press Sync now. Backups run weekly and each new backup replaces the previous one." />
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button Content="Sync now" Command="{x:Bind ViewModel.SyncNowCommand}" />
+                        <Button Content="Back up now" Command="{x:Bind ViewModel.BackupNowCommand}" />
+                        <Button Content="Refresh admin settings" Command="{x:Bind ViewModel.RefreshConfigCommand}" />
+                    </StackPanel>
+                    <TextBlock FontSize="12" Opacity="0.7" Text="{x:Bind ViewModel.LastSync, Mode=OneWay}" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Receipts and hardware" Style="{StaticResource SectionTitleStyle}" />
+                    <ComboBox Header="Receipt printer" ItemsSource="{x:Bind ViewModel.Printers, Mode=OneWay}"
+                              SelectedItem="{x:Bind ViewModel.SelectedPrinter, Mode=TwoWay}" />
+                    <ToggleSwitch Header="Print automatically after checkout"
+                                  IsOn="{x:Bind ViewModel.AutoPrint, Mode=TwoWay}" />
+                    <ToggleSwitch Header="Open cash drawer on print"
+                                  IsOn="{x:Bind ViewModel.CashDrawerKick, Mode=TwoWay}" />
+                    <TextBlock Text="{x:Bind ViewModel.ActiveTemplate}" Opacity="0.7" FontSize="12" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Support" Style="{StaticResource SectionTitleStyle}" />
+                    <TextBlock Text="{x:Bind ViewModel.WhatsAppNumber, Mode=OneWay}" />
+                    <TextBlock Text="{x:Bind ViewModel.Credit}" Opacity="0.6" FontSize="12" />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="{x:Bind ViewModel.Status, Mode=OneWay}" Opacity="0.75" TextWrapping="Wrap" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

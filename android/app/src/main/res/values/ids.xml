@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- View tag keys used by ThemeEngine. Android requires tag keys to be
+         application-specific resource ids, otherwise setTag() throws. -->
+    <item name="tag_theme_root" type="id" />
+    <item name="tag_theme_stamp" type="id" />
+</resources>
