@@ -1,0 +1,72 @@
+name: QuickTap POS Android Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Verify Android project
+        working-directory: android
+        run: |
+          echo "Checking Android project..."
+          test -f gradlew
+          test -f settings.gradle
+          test -f app/build.gradle
+          test -f app/google-services.json
+          test -f gradle/wrapper/gradle-wrapper.jar
+          test -f gradle/wrapper/gradle-wrapper.properties
+          echo "Android project structure OK"
+
+      - name: Make Gradle executable
+        working-directory: android
+        run: chmod +x gradlew
+
+      - name: Check Gradle
+        working-directory: android
+        run: ./gradlew --version
+
+      - name: Clean project
+        working-directory: android
+        run: ./gradlew clean --no-daemon
+
+      - name: Build Debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuickTap-POS-Debug
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Build Release APK
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuickTap-POS-Release
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
