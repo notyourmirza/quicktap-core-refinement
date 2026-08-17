@@ -91,13 +91,16 @@ if (is_post()) {
         AdminLog::write('license_' . $action, 'license', (string) $license['id'], (int) $license['shop_id']);
         Flash::success('Licence ' . $action . 'ed for ' . ($days > 0 ? $days . ' day(s)' : 'lifetime')
             . '. Key: ' . $license['license_key']);
-    } elseif (in_array($action, ['revoke', 'suspend', 'reactivate'], true) && $license) {
-        $new = $action === 'reactivate'
+    } elseif (in_array($action, ['revoke', 'suspend', 'resume', 'reactivate'], true) && $license) {
+        // resume / reactivate never invent a new expiry: an already-expired
+        // licence comes back as EXPIRED, exactly as the server recorded it.
+        $new = in_array($action, ['resume', 'reactivate'], true)
             ? (empty($license['expires_at']) || strtotime((string) $license['expires_at']) > time() ? 'ACTIVE' : 'EXPIRED')
-            : ($action === 'revoke' ? 'REVOKED' : 'BLOCKED');
+            : ($action === 'revoke' ? 'REVOKED' : 'SUSPENDED');
         Database::run('UPDATE licenses SET status = ? WHERE id = ?', [$new, (int) $license['id']]);
         Database::run('UPDATE shops SET license_status = ?, status = ? WHERE id = ?',
             [$new, $new === 'ACTIVE' ? 'active' : 'suspended', (int) $license['shop_id']]);
+        AdminLog::write('license_' . $action, 'license', (string) $license['id'], (int) $license['shop_id']);
         AdminAudit::write('license_' . $action, 'license', (string) $license['id'], (string) $license['status'], $new);
         Flash::success('Licence ' . $new . '.');
     } elseif ($action === 'block_user' || $action === 'unblock_user') {
@@ -106,6 +109,7 @@ if (is_post()) {
         if ($userId > 0) {
             Database::run('UPDATE users SET is_blocked = ? WHERE id = ?', [$blocked, $userId]);
             AdminAudit::write($action, 'user', (string) $userId, $blocked ? '0' : '1', (string) $blocked);
+            AdminLog::write($action, 'user', (string) $userId);
             Flash::success($blocked ? 'User blocked.' : 'User unblocked.');
         }
     } elseif ($action === 'reject_request') {
@@ -126,7 +130,7 @@ if (is_post()) {
 }
 
 $tab   = pick(query('tab', 'requests'),
-    ['requests', 'active', 'expired', 'revoked', 'blocked', 'all'], 'requests');
+    ['requests', 'active', 'expired', 'revoked', 'suspended', 'blocked', 'all'], 'requests');
 $plans = Database::all('SELECT id, code, name FROM plans WHERE is_active = 1 ORDER BY sort_order, price');
 
 $requests = Database::all(
@@ -143,9 +147,17 @@ $requests = Database::all(
       ORDER BY lr.created_at DESC LIMIT 200'
 );
 
-$statusFilter = ['active' => 'ACTIVE', 'expired' => 'EXPIRED', 'revoked' => 'REVOKED', 'blocked' => 'BLOCKED'];
+$statusFilter = ['active' => 'ACTIVE', 'expired' => 'EXPIRED', 'revoked' => 'REVOKED',
+                 'suspended' => 'SUSPENDED', 'blocked' => 'BLOCKED'];
 $where  = isset($statusFilter[$tab]) ? 'WHERE l.status = ?' : '';
 $params = isset($statusFilter[$tab]) ? [$statusFilter[$tab]] : [];
+$search = trim(query('q'));
+if ($search !== '') {
+    $where .= ($where === '' ? 'WHERE ' : ' AND ')
+        . '(u.username LIKE ? OR s.name LIKE ? OR l.license_key LIKE ? OR l.device_id LIKE ?)';
+    $like   = '%' . $search . '%';
+    $params = array_merge($params, [$like, $like, $like, $like]);
+}
 $licenses = $tab === 'requests' ? [] : Database::all(
     "SELECT l.*, s.name AS shop_name, u.username, u.id AS uid, u.is_blocked, u.credits,
             u.last_login_at, p.name AS plan_name
@@ -164,8 +176,22 @@ $counts = Database::first(
         (SELECT COUNT(*) FROM licenses WHERE status = "ACTIVE")  AS active,
         (SELECT COUNT(*) FROM licenses WHERE status = "EXPIRED") AS expired,
         (SELECT COUNT(*) FROM licenses WHERE status = "REVOKED") AS revoked,
+        (SELECT COUNT(*) FROM licenses WHERE status = "SUSPENDED") AS suspended,
         (SELECT COUNT(*) FROM licenses WHERE status = "BLOCKED") AS blocked'
 ) ?: [];
+
+/** Remaining days, always from the SERVER clock. */
+function license_remaining(?string $expiresAt): string
+{
+    if ($expiresAt === null || $expiresAt === '') {
+        return '<span class="badge text-bg-info">Lifetime</span>';
+    }
+    $days = (int) ceil((strtotime($expiresAt) - time()) / 86400);
+    if ($days < 0) {
+        return '<span class="badge text-bg-secondary">Expired</span>';
+    }
+    return '<span class="badge text-bg-' . ($days <= 7 ? 'warning' : 'success') . '">' . $days . ' days</span>';
+}
 
 /** Reusable activation form (predefined plans + custom days). */
 function license_action_form(array $row, array $plans): string
@@ -177,6 +203,7 @@ function license_action_form(array $row, array $plans): string
     <input type="hidden" name="shop_id" value="<?= e($row['shop_id']) ?>">
     <div class="col-auto">
       <select name="duration_days" class="form-select form-select-sm">
+        <option value="1">1 day</option>
         <option value="7">7 days</option>
         <option value="30" selected>30 days</option>
         <option value="90">90 days</option>
@@ -200,14 +227,26 @@ function license_action_form(array $row, array $plans): string
     <div class="col-auto btn-group btn-group-sm">
       <button class="btn btn-success" name="action" value="activate">Activate</button>
       <button class="btn btn-outline-primary" name="action" value="extend">Extend</button>
-      <button class="btn btn-outline-warning" name="action" value="suspend">Suspend</button>
-      <button class="btn btn-outline-danger" name="action" value="revoke">Revoke</button>
-      <button class="btn btn-outline-light" name="action" value="reactivate">Reactivate</button>
+      <button class="btn btn-outline-warning" name="action" value="suspend"
+              data-confirm="Suspend this licence?">Suspend</button>
+      <button class="btn btn-outline-info" name="action" value="resume">Resume</button>
+      <button class="btn btn-outline-danger" name="action" value="revoke"
+              data-confirm="Revoke this licence? The device locks on its next check.">Revoke</button>
     </div>
   </form>
     <?php return (string) ob_get_clean();
 }
 ?>
+
+<form class="row g-2 mb-3" method="get">
+  <input type="hidden" name="p" value="licenses">
+  <input type="hidden" name="tab" value="<?= e($tab) ?>">
+  <div class="col-sm-5 col-md-4">
+    <input class="form-control" name="q" value="<?= e(query('q')) ?>"
+           placeholder="Search account, shop, licence key or device">
+  </div>
+  <div class="col-auto"><button class="btn btn-primary">Search</button></div>
+</form>
 
 <ul class="nav nav-pills mb-3 gap-1">
   <?php foreach ([
@@ -215,6 +254,7 @@ function license_action_form(array $row, array $plans): string
       'active'   => 'Active (' . (int) ($counts['active'] ?? 0) . ')',
       'expired'  => 'Expired (' . (int) ($counts['expired'] ?? 0) . ')',
       'revoked'  => 'Revoked (' . (int) ($counts['revoked'] ?? 0) . ')',
+      'suspended'=> 'Suspended (' . (int) ($counts['suspended'] ?? 0) . ')',
       'blocked'  => 'Blocked (' . (int) ($counts['blocked'] ?? 0) . ')',
       'all'      => 'All licences',
   ] as $slug => $label): ?>
@@ -279,8 +319,9 @@ function license_action_form(array $row, array $plans): string
     <div class="table-responsive">
       <table class="table table-sm align-middle mb-0">
         <thead><tr>
-          <th>Licence key</th><th>Account</th><th>Shop</th><th>Status</th>
-          <th>Duration</th><th>Expiry</th><th>Last check</th><th style="min-width:520px">Action</th>
+          <th>Licence key</th><th>Account</th><th>Device</th><th>Status</th>
+          <th>Duration</th><th>Start</th><th>Expiry</th><th>Remaining</th><th>Created</th>
+          <th style="min-width:560px">Action</th>
         </tr></thead>
         <tbody>
         <?php foreach ($licenses as $l): ?>
@@ -288,11 +329,15 @@ function license_action_form(array $row, array $plans): string
             <td class="font-monospace"><?= e($l['license_key']) ?></td>
             <td><?= e($l['username'] ?? '—') ?>
               <div class="small text-secondary"><?= (int) ($l['credits'] ?? 0) ?> credits</div></td>
-            <td><?= e($l['shop_name']) ?></td>
+            <td><?= e($l['shop_name']) ?>
+              <div class="small text-secondary font-monospace"><?= e(substr((string) ($l['device_id'] ?? ''), 0, 12)) ?></div></td>
             <td><?= status_badge(strtolower((string) $l['status'])) ?></td>
             <td><?= (int) $l['duration_days'] === 0 ? 'Lifetime' : (int) $l['duration_days'] . ' days' ?></td>
-            <td><?= nice_date($l['expires_at']) ?></td>
-            <td><?= nice_date($l['last_verified_at']) ?></td>
+            <td><?= nice_date($l['activated_at'], 'd M Y') ?></td>
+            <td><?= nice_date($l['expires_at'], 'd M Y') ?></td>
+            <td><?= license_remaining($l['expires_at'] ?? null) ?></td>
+            <td><?= nice_date($l['created_at'], 'd M Y') ?>
+              <div class="small text-secondary">checked <?= nice_date($l['last_verified_at'], 'd M H:i') ?></div></td>
             <td>
               <?= license_action_form($l + ['license_id' => $l['id']], $plans) ?>
               <form method="post" class="mt-1">
@@ -308,7 +353,7 @@ function license_action_form(array $row, array $plans): string
           </tr>
         <?php endforeach; ?>
         <?php if (!$licenses): ?>
-          <tr><td colspan="8" class="text-secondary p-3">Nothing here.</td></tr>
+          <tr><td colspan="10" class="text-secondary p-3">No licences match this view.</td></tr>
         <?php endif; ?>
         </tbody>
       </table>
